@@ -20,6 +20,8 @@ export default class AliasLinkResolver extends Plugin {
                 this.fixBrokenLinks(file);
             })
         );
+        
+        this.startBackgroundScan();
     }
     
     async resolveAliasLinks() {
@@ -87,5 +89,18 @@ export default class AliasLinkResolver extends Plugin {
             }
         }
         return null;
+    }
+
+    startBackgroundScan() {
+        this.interval = setInterval(() => {
+            console.log("Running background alias scan...");
+            this.resolveAliasLinks();
+        }, 60000); // Run every 60 seconds
+    }
+    
+    onunload() {
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
     }
 }
